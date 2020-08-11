@@ -32,8 +32,11 @@ function run_script() {
    local script
    eval "script=\${$1:-}"  # fetch value of variable passed in $1 (double indirection)
    if [ "${script// }" != "" ]; then  # only run when non-empty
+       echo "PWD=$PWD"
+       set -x
       travis_run --title "$(colorize BOLD Running $1)" $script
       result=$?
+      set +x
       test $result -ne 0 && echo -e $(colorize RED "$1 failed with return value: $result. Aborting.") && exit 2
    fi
 }
